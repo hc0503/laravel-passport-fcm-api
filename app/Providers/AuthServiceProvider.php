@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // Override the email notification for verifying email
+        VerifyEmail::toMailUsing(function ($notifiable, $url){
+            $mail = new MailMessage;
+            $mail->subject('Welcome to Ugigs Stream!!');
+            $mail->markdown('emails.verify-email', ['url' => $url]);
+            return $mail;
+        });
     }
 }
