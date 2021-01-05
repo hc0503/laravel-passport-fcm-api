@@ -31,7 +31,7 @@ class AuthController extends BaseController
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $input['name'] = $input['email'];
-        $user = User::create($input);
+        $user = User::create($input)->sendEmailVerificationNotification();
         $success['token'] =  $user->createToken('MyApp')->accessToken;
         $success['name'] =  $user->name;
    
