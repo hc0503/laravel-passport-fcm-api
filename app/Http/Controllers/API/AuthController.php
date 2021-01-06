@@ -7,6 +7,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
+use Illuminate\Support\Facades\Password;
    
 class AuthController extends BaseController
 {
@@ -15,7 +16,7 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function signup(Request $request)
+    public function postSignup(Request $request)
     {
         $validator = Validator::make($request->all(), [
             // 'name' => 'required',
@@ -32,8 +33,7 @@ class AuthController extends BaseController
         $input['password'] = bcrypt($input['password']);
         $input['name'] = $input['email'];
         $user = User::create($input)->sendEmailVerificationNotification();
-        $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
+        $success['email'] =  $input['email'];
    
         return $this->sendResponse($success, 'User signup successfully.');
     }
@@ -43,7 +43,7 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function postLogin(Request $request)
     {
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user();
@@ -59,5 +59,30 @@ class AuthController extends BaseController
         else{ 
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         } 
+    }
+
+    /**
+     * Create token password reset
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postForgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+   
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+        
+        return $status === Password::RESET_LINK_SENT
+            ? $this->sendResponse([], __($status))
+            : $this->sendError('Email sending error.', ['email' => __($status)]);
     }
 }

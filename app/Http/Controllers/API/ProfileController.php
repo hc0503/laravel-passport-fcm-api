@@ -14,6 +14,20 @@ class ProfileController extends BaseController
     protected $profileType = 'PERFORMER';
 
     /**
+     * Display the specified resource.
+     * 
+     * @param \Illuminate\Http\Request  $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getDetail(Request $request, $id)
+    {
+        $profile = Profile::findOrFail($id);
+
+        return $this->sendResponse(new ProfileResource($profile), 'Get profile details.');
+    }
+    
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
