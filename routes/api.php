@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProductController;
+use App\Http\Controllers\API\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +27,8 @@ Route::post('login', [AuthController::class, 'login']);
      
 Route::middleware('auth:api')->group( function () {
     Route::resource('products', ProductController::class);
+
+    Route::group(['prefix' => 'profile'], function () {
+        Route::post('store', [ProfileController::class, 'postStore']);
+    });
 });
