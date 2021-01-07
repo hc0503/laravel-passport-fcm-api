@@ -25,7 +25,7 @@ class Profile extends Model
         'tags',
 
         'name',
-        'interested_id',
+        'interested_in',
         'organization_type',
         'facebook',
         'twitter',
