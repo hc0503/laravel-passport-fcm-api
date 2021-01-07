@@ -34,8 +34,8 @@ Route::middleware('auth:api')->group( function () {
     Route::group(['prefix' => 'profile'], function () {
         Route::get('detail/{profile}', [ProfileController::class, 'getDetail']);
         Route::post('store', [ProfileController::class, 'postStore']);
-        Route::post('upload/cover-photo', [ProfileController::class, 'uploadCover']);
-        Route::post('upload/profile-photo', [ProfileController::class, 'uploadPhoto']);
+        Route::post('cover-photo', [ProfileController::class, 'postCoverPhoto']);
+        Route::post('profile-photo', [ProfileController::class, 'postProfilePhoto']);
     });
 });
 

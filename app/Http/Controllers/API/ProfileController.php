@@ -92,7 +92,7 @@ class ProfileController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function uploadCoverPhoto(Request $request)
+    public function postCoverPhoto(Request $request)
     {
         try {
             $input = $request->all();
@@ -129,7 +129,7 @@ class ProfileController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function uploadProfilePhoto(Request $request)
+    public function postProfilePhoto(Request $request)
     {
         try {
             $input = $request->all();
