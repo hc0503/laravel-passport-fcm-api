@@ -26,7 +26,7 @@ class Profile extends JsonResource
             'tags' => json_decode($this->tags),
 
             'name' => $this->name,
-            'interested_in' => $this->interested_in,
+            'interested_in' => json_decode($this->interested_in),
             'organization_type' => $this->organization_type,
             'facebook' => $this->facebook,
             'twitter' => $this->twitter,
