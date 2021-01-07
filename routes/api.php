@@ -34,5 +34,14 @@ Route::middleware('auth:api')->group( function () {
     Route::group(['prefix' => 'profile'], function () {
         Route::get('detail/{profile}', [ProfileController::class, 'getDetail']);
         Route::post('store', [ProfileController::class, 'postStore']);
+        Route::post('upload/cover-photo', [ProfileController::class, 'uploadCover']);
+        Route::post('upload/profile-photo', [ProfileController::class, 'uploadPhoto']);
     });
+});
+
+Route::fallback(function(){
+    return response()->json([
+        'success' => false,
+        'message' => 'Page Not Found. If error persists, contact info@website.com',
+    ], 404);
 });
