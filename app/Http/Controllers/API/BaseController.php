@@ -12,7 +12,7 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendResponse($result, $message)
+    public function sendResponse($result, $message, $code = 200)
     {
     	$response = [
             'success' => true,
@@ -20,10 +20,8 @@ class BaseController extends Controller
             'message' => $message,
         ];
 
-
-        return response()->json($response, 200);
+        return response()->json($response, $code);
     }
-
 
     /**
      * return error response.
@@ -34,15 +32,37 @@ class BaseController extends Controller
     {
     	$response = [
             'success' => false,
+            'data' => [],
             'message' => $error,
         ];
-
 
         if(!empty($errorMessages)){
             $response['data'] = $errorMessages;
         }
 
-
         return response()->json($response, $code);
+    }
+
+    /**
+     * Upload file.
+     * 
+     * @param mixed $file
+     * @param string $storePath
+     * @return bool
+     */
+    public function fileStore($file, $storePath)
+    {
+        return $file->store($storePath, 'public');
+    }
+
+    /**
+     * Destroy file.
+     * 
+     * @param string $filePath
+     * @return bool
+     */
+    public function fileDestroy($filePath)
+    {
+        return unlink($filePath);
     }
 }
