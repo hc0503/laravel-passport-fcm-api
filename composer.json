@@ -14,8 +14,10 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/passport": "^10.1",
+        "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.1"
+        "laravel/ui": "^3.1",
+        "sudiptpa/guid": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
