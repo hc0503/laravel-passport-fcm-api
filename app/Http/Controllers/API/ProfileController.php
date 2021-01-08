@@ -25,7 +25,11 @@ class ProfileController extends BaseController
      */
     public function getDetail(Request $request, $id)
     {
-        $profile = Profile::findOrFail($id);
+        try {
+            $profile = Profile::findOrFail($id);
+        } catch (Exception $exception) {
+            return $this->sendError($exception->getMessage());
+        }
 
         return $this->sendResponse(new ProfileResource($profile), 'Successfully fetch profile details.');
     }
