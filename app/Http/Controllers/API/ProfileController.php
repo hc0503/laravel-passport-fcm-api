@@ -27,7 +27,7 @@ class ProfileController extends BaseController
     {
         $profile = Profile::findOrFail($id);
 
-        return $this->sendResponse(new ProfileResource($profile), 'Get profile details.');
+        return $this->sendResponse(new ProfileResource($profile), 'Successfully fetch profile details.');
     }
 
     /**
@@ -42,7 +42,6 @@ class ProfileController extends BaseController
             $input = $request->all();
             if ($input['type'] === $this->profileType) {    // PERFORMER
                 $validator = Validator::make($input, [
-                    'user_id' => ['required'],
                     'type' => ['required'],
                     'stage_name' => ['required'],
                     'about_you' => ['required'],
@@ -55,7 +54,6 @@ class ProfileController extends BaseController
                 ]);
             } else {                                        // AUDIENCE
                 $validator = Validator::make($input, [
-                    'user_id' => ['required'],
                     'type' => ['required'],
                     'name' => ['required'],
                     'interested_in' => ['required', 'array'],
@@ -75,9 +73,9 @@ class ProfileController extends BaseController
             $input['tags'] = json_encode($input['tags']);
             $input['interested_in'] = json_encode($input['interested_in']);
 
-            $user = User::findOrFail($input['user_id']);
+            $user = auth('api')->user();
             $profile = $user->profile()->updateOrCreate([
-                'user_id' => $input['user_id']
+                'user_id' => $user->id
             ], $input);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
@@ -97,14 +95,13 @@ class ProfileController extends BaseController
         try {
             $input = $request->all();
             $validator = Validator::make($input, [
-                'user_id' => ['required'],
                 'cover_photo' => ['required', 'mimes:jpeg,jpg,png'],
             ]);
             if ($validator->fails()) {
                 return $this->sendError('Validation Error.', $validator->errors());       
             }
 
-            $user = User::findOrFail($input['user_id']);
+            $user = auth('api')->user();
             $cover_photo = null;
             if ($request->hasFile('cover_photo')) {
                 $cover_photo = $this->fileStore($request->file('cover_photo'), 'profile');
@@ -114,7 +111,7 @@ class ProfileController extends BaseController
                 $this->fileDestroy($oldCoverPhotoPath);
             }
             $profile = $user->profile()->updateOrCreate([
-                'user_id' => $input['user_id']
+                'user_id' => $user->id
             ], ['cover_photo' => $cover_photo]);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
@@ -141,7 +138,7 @@ class ProfileController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());       
             }
 
-            $user = User::findOrFail($input['user_id']);
+            $user = auth('api')->user();
             $profile_photo = null;
             if ($request->hasFile('profile_photo')) {
                 $profile_photo = $this->fileStore($request->file('profile_photo'), 'profile');
@@ -151,7 +148,7 @@ class ProfileController extends BaseController
                 $this->fileDestroy($oldProfilePhotoPath);
             }
             $profile = $user->profile()->updateOrCreate([
-                'user_id' => $input['user_id']
+                'user_id' => $user->id
             ], ['profile_photo' => $profile_photo]);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
