@@ -61,7 +61,7 @@ class AuthController extends BaseController
             return $this->sendResponse(new AuthResource($user), 'User login successfully.');
         } 
         else{ 
-            return $this->sendError('Unauthorised.');
+            return $this->sendError('Invalid Credentials.', ['email' => __('auth.failed')]);
         } 
     }
 
