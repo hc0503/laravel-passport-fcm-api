@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Validator;
 use Illuminate\Support\Facades\Password;
 use Exception;
+use App\Http\Resources\Auth as AuthResource;
    
 class AuthController extends BaseController
 {
@@ -56,10 +57,8 @@ class AuthController extends BaseController
             if ($user->email_verified_at === null)
                 return $this->sendError('Email no verificated.');
 
-            $success['token'] =  $user->createToken('MyApp')->accessToken; 
-            $success['name'] =  $user->name;
-   
-            return $this->sendResponse($success, 'User login successfully.');
+            $user->tokenResult = $user->createToken($user->email);
+            return $this->sendResponse(new AuthResource($user), 'User login successfully.');
         } 
         else{ 
             return $this->sendError('Unauthorised.');
@@ -89,5 +88,31 @@ class AuthController extends BaseController
         return $status === Password::RESET_LINK_SENT
             ? $this->sendResponse([], __($status))
             : $this->sendError('Email sending error.', ['email' => __($status)]);
+    }
+
+    /**
+     * Fetch auth data
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getUser(Request $request)
+    {
+        $user = auth('api')->user();
+
+        return $this->sendResponse(new AuthResource($user), 'User fetch successfully.');
+    }
+
+    /**
+     * Logout
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getLogout(Request $request)
+    {
+        $request->user()->token()->revoke();
+
+        return $this->sendResponse([], 'Successfully logged out.');
     }
 }
