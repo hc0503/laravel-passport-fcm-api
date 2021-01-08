@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Auth as AuthResource;
+use App\Models\User;
 
 class Profile extends JsonResource
 {
@@ -15,8 +17,8 @@ class Profile extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
+            'id' => $this->guid,
+            'user' => new AuthResource(User::findOrFail($this->user_id)),
             'type' => $this->type,
             'cover_photo' => $this->cover_photo ? asset("storage/".$this->cover_photo) : null,
             'profile_photo' => $this->profile_photo ? asset("storage/".$this->profile_photo) : null,

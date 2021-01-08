@@ -27,11 +27,11 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
     Route::middleware('auth:api')->group( function () {
         Route::get('user', [AuthController::class, 'getUser']);
         Route::get('logout', [AuthController::class, 'getLogout']);
-        
+
         Route::resource('products', ProductController::class);
 
         Route::group(['prefix' => 'profile'], function () {
-            Route::get('detail/{profile}', [ProfileController::class, 'getDetail']);
+            Route::get('detail/{id}', [ProfileController::class, 'getDetail']);
             Route::post('store', [ProfileController::class, 'postStore']);
             Route::post('cover-photo', [ProfileController::class, 'postCoverPhoto']);
             Route::post('profile-photo', [ProfileController::class, 'postProfilePhoto']);

@@ -23,10 +23,10 @@ class ProfileController extends BaseController
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function getDetail(Request $request, $id)
+    public function getDetail(Request $request, $guid)
     {
         try {
-            $profile = Profile::findOrFail($id);
+            $profile = Profile::query()->whereGuid($guid)->firstOrFail();
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
         }

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\HasGuidTrait;
 
 class Profile extends Model
 {
-    use HasFactory;
+    use HasFactory, HasGuidTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -15,6 +16,8 @@ class Profile extends Model
      * @var array
      */
     protected $fillable = [
+        'id',
+        'guid',
         'user_id',
         'type',
         'cover_photo',

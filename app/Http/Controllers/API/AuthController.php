@@ -35,7 +35,7 @@ class AuthController extends BaseController
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
             $input['name'] = $input['email'];
-            $user = User::create($input)->sendEmailVerificationNotification();
+            $user = User::query()->create($input)->sendEmailVerificationNotification();
             $success['email'] =  $input['email'];
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
