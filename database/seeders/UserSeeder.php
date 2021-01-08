@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     {
         User::truncate();
 
-        User::factory()->count(1)->create([
+        User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'admin@admin.com',
         ]);
