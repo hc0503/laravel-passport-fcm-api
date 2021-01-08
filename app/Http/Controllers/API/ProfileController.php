@@ -147,9 +147,12 @@ class ProfileController extends BaseController
             if ($request->hasFile('profile_photo')) {
                 $profile_photo = $this->fileStore($request->file('profile_photo'), 'profile');
             }
-            $oldProfilePhotoPath = public_path("storage/".$user->profile->profile_photo);
-            if (File::exists($oldProfilePhotoPath) && $user->profile->profile_photo !== null) { // unlink or remove previous image from folder
-                $this->fileDestroy($oldProfilePhotoPath);
+            
+            if ($user->profile) {
+                $oldProfilePhotoPath = public_path("storage/".$user->profile->profile_photo);
+                if (File::exists($oldProfilePhotoPath) && $user->profile->profile_photo !== null) { // unlink or remove previous image from folder
+                    $this->fileDestroy($oldProfilePhotoPath);
+                }
             }
             $profile = $user->profile()->updateOrCreate([
                 'user_id' => $user->id
