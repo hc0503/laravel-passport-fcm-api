@@ -35,8 +35,8 @@ class AuthController extends BaseController
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
             $input['name'] = $input['email'];
-            // $user = User::query()->create($input)->sendEmailVerificationNotification();
-            $user = User::query()->create($input);
+            $user = User::query()->create($input)->sendEmailVerificationNotification();
+            // $user = User::query()->create($input);
             $success['email'] =  $input['email'];
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
@@ -55,8 +55,8 @@ class AuthController extends BaseController
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
             $user = Auth::user();
 
-            // if ($user->email_verified_at === null)
-            //     return $this->sendError('Email no verificated.');
+            if ($user->email_verified_at === null)
+                return $this->sendError('Email no verificated.');
 
             $user->tokenResult = $user->createToken($user->email);
             return $this->sendResponse(new AuthResource($user), 'User login successfully.');
