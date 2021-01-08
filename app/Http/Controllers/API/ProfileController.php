@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Http\Resources\Profile as ProfileResource;
 use Exception;
 use File;
+use Socialite;
 
 class ProfileController extends BaseController
 {
@@ -135,7 +136,6 @@ class ProfileController extends BaseController
         try {
             $input = $request->all();
             $validator = Validator::make($input, [
-                'user_id' => ['required'],
                 'profile_photo' => ['required', 'mimes:jpeg,jpg,png'],
             ]);
             if ($validator->fails()) {
@@ -159,5 +159,10 @@ class ProfileController extends BaseController
         }
 
         return $this->sendResponse(new ProfileResource($profile), 'The cover photo saved successfully.');
+    }
+
+    public function socialGoogleRedirect()
+    {
+        return Socialite::driver('google')->redirect();
     }
 }
