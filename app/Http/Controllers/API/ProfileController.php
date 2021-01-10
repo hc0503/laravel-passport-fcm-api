@@ -114,7 +114,7 @@ class ProfileController extends BaseController
             if ($user->profile) {
                 $oldCoverPhotoPath = public_path("storage/".$user->profile->cover_photo);
                 if (File::exists($oldCoverPhotoPath) && $user->profile->cover_photo !== null) { // unlink or remove previous image from folder
-                    $this->fileDestroy($oldProfilePhotoPath);
+                    $this->fileDestroy($oldCoverPhotoPath);
                 }
             }
             $profile = $user->profile()->updateOrCreate([
