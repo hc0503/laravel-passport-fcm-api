@@ -50,18 +50,18 @@ Route::group(['prefix' => 'social'], function () {
     Route::get('redirect/{provider}', function (Request $request, $provider) {
         return \Socialite::driver($provider)
             ->stateless()
-            ->redirectUrl(
-                route('social.callback', ['provider' => $provider, 'accessToken' => 'HHHHHHHHHHHHHHHH'])
-            )
+            ->with(['state' => 'event_slug=foobar'])
             ->redirect()
             ->getTargetUrl();
     });
-    Route::get('callback', function (Request $request) {
+    Route::get('callback/{provider}', function (Request $request, $provider) {
         try {
             $userData = \Socialite::driver($provider)->stateless()->user();
         } catch (\Exception $exception) {
-            dd('ERROR');
+            dd($exception);
         }
+        $state = $request->input('state');
+        parse_str($state, $result);
         dd($request->all());
     })->name('social.callback');
 });
