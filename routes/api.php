@@ -50,7 +50,10 @@ Route::group(['prefix' => 'social'], function () {
     Route::get('redirect/{provider}', function (Request $request, $provider) {
         return \Socialite::driver($provider)
             ->stateless()
-            ->with(['accessToken' => 'HHHHHHHHHHHHHHHHHHHHHHHHHH'])
+            // ->with(['accessToken' => 'HHHHHHHHHHHHHHHHHHHHHHHHHH'])
+            ->redirectUrl(
+                route('social.callback', $provider, ['accessToken' => 'HHHHHHHHHHHHHHHH'])
+            )
             ->redirect()
             ->getTargetUrl();
     });
@@ -61,5 +64,5 @@ Route::group(['prefix' => 'social'], function () {
             dd('ERROR');
         }
         dd($request->all());
-    });
+    })->name('social.callback');
 });
