@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +22,9 @@ Auth::routes(['verify' => true]);
 
 Route::middleware(['auth', 'verified'])->group( function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
+
+Route::group(['prefix' => 'social'], function () {
+    Route::get('google-redirect', [ProfileController::class, 'googleRedirect']);
+    Route::get('google-callback', [ProfileController::class, 'googleCallback']);
 });
