@@ -196,7 +196,6 @@ class ProfileController extends BaseController
     {
         try {
             $socialData = Socialite::driver($provider)->stateless()->user();
-            dd($socialData);
             parse_str($request->input('state'), $state);
             $user = User::query()->whereGuid($state['userKey'])->firstOrFail();
             if (!$user->profile) {
