@@ -20,7 +20,7 @@ class CreateSocialsTable extends Migration
                 ->constrained()
                 ->onDelete('cascade');
             $table->string('provider')->nullable();
-            $table->string1('social_id')->nullable();
+            $table->string('social_id')->nullable();
             $table->string('token')->nullable();
             $table->string('refresh_token')->nullable();
             $table->string('expires_in')->nullable();
