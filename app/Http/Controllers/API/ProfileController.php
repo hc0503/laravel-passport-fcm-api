@@ -209,7 +209,7 @@ class ProfileController extends BaseController
                 'provider' => $provider
             ], [
                 // 'provider' => $provider,
-                'social_id' => $socialData->id ?? null,
+                'social_id' => "$socialData->id",
                 // 'token' => $socialData->token ?? null,
                 // 'refresh_token' => $socialData->refreshToken ?? null,
                 // 'expires_in' => $socialData->expiresIn ?? null,
