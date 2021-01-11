@@ -208,15 +208,15 @@ class ProfileController extends BaseController
                 'profile_id' => $profile->id,
                 'provider' => $provider
             ], [
-                'provider' => $provider,
+                // 'provider' => $provider,
                 'social_id' => $socialData->id ?? null,
-                'token' => $socialData->token ?? null,
-                'refresh_token' => $socialData->refreshToken ?? null,
-                'expires_in' => $socialData->expiresIn ?? null,
-                'nickname' => $socialData->nickname ?? null,
-                'name' => $socialData->name ?? null,
-                'email' => $socialData->name ?? null,
-                'avatar' => $socialData->avatar ?? null
+                // 'token' => $socialData->token ?? null,
+                // 'refresh_token' => $socialData->refreshToken ?? null,
+                // 'expires_in' => $socialData->expiresIn ?? null,
+                // 'nickname' => $socialData->nickname ?? null,
+                // 'name' => $socialData->name ?? null,
+                // 'email' => $socialData->name ?? null,
+                // 'avatar' => $socialData->avatar ?? null
             ]);
 
             return $this->sendResponse(SocialResource::collection($profile->socials), 'The social account connected successfully.');
