@@ -204,6 +204,7 @@ class ProfileController extends BaseController
             } else {
                 $profile = $user->profile;
             }
+            dd($socialData['token']);
             $profile->socials()->updateOrCreate([
                 'profile_id' => $profile->id,
                 'provider' => $provider
