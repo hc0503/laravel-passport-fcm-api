@@ -46,8 +46,8 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
     });
 });
 
-Route::group(['prefix' => 'social'], function (Request $request) {
-    Route::get('redirect/{provider}', function ($provider) {
+Route::group(['prefix' => 'social'], function () {
+    Route::get('redirect/{provider}', function (Request $request, $provider) {
         return \Socialite::driver($provider)
             ->stateless()
             ->with(['accessToken' => 'HHHHHHHHHHHHHHHHHHHHHHHHHH'])
@@ -60,6 +60,6 @@ Route::group(['prefix' => 'social'], function (Request $request) {
         } catch (\Exception $exception) {
             dd('ERROR');
         }
-        dd($request->accessToken);
+        dd($request->all());
     });
 });
