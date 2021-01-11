@@ -165,9 +165,4 @@ class ProfileController extends BaseController
 
         return $this->sendResponse(new ProfileResource($profile), 'The cover photo saved successfully.');
     }
-
-    public function socialGoogleRedirect()
-    {
-        return Socialite::driver('google')->redirect();
-    }
 }
