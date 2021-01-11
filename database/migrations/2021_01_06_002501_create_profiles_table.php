@@ -32,11 +32,6 @@ class CreateProfilesTable extends Migration
             $table->json('interested_in')->nullable();
             $table->string('organization_type')->nullable();
 
-            $table->string('facebook')->nullable();
-            $table->string('twitter')->nullable();
-            $table->string('linkedin')->nullable();
-            $table->string('instagram')->nullable();
-
             $table->timestamps();
         });
     }

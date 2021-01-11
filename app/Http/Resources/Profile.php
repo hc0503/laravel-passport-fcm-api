@@ -30,9 +30,6 @@ class Profile extends JsonResource
             'name' => $this->name,
             'interested_in' => json_decode($this->interested_in),
             'organization_type' => $this->organization_type,
-            'facebook' => $this->facebook,
-            'twitter' => $this->twitter,
-            'linkedin' => $this->linkedin,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];
