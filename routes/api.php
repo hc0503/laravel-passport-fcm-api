@@ -45,3 +45,21 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
         ], 404);
     });
 });
+
+Route::group(['prefix' => 'social'], function (Request $request) {
+    Route::get('redirect/{provider}', function ($provider) {
+        return \Socialite::driver($provider)
+            ->stateless()
+            ->with(['accessToken' => 'HHHHHHHHHHHHHHHHHHHHHHHHHH'])
+            ->redirect()
+            ->getTargetUrl();
+    });
+    Route::get('callback/{provider}', function (Request $request, $provider) {
+        try {
+            $userData = \Socialite::driver($provider)->stateless()->user();
+        } catch (\Exception $exception) {
+            dd('ERROR');
+        }
+        dd($request->accessToken);
+    });
+});

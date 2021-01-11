@@ -25,6 +25,6 @@ Route::middleware(['auth', 'verified'])->group( function () {
 });
 
 Route::group(['prefix' => 'social'], function () {
-    Route::get('google-redirect', [ProfileController::class, 'googleRedirect']);
-    Route::get('google-callback', [ProfileController::class, 'googleCallback']);
+    Route::get('redirect/{provider}', [ProfileController::class, 'getSocialRedirect']);
+    Route::get('callback/{provider}', [ProfileController::class, 'getSocialCallback']);
 });

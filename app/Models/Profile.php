@@ -35,4 +35,14 @@ class Profile extends Model
         'linkedin',
         'instagram',
     ];
+
+    /**
+     * Get the socials associated with the profile.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function socials()
+    {
+        return $this->hasMany(Social::class);
+    }
 }
