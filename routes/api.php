@@ -23,12 +23,14 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
     Route::post('login', [AuthController::class, 'postLogin']);
     Route::post('signup', [AuthController::class, 'postSignup']);
     Route::post('forgot-password', [AuthController::class, 'postForgotPassword']);
+    Route::get('social/{provider}/callback', [ProfileController::class, 'getSocialCallback']);
 
     Route::middleware('auth:api')->group( function () {
         Route::get('user', [AuthController::class, 'getUser']);
         Route::get('logout', [AuthController::class, 'getLogout']);
 
         Route::resource('products', ProductController::class);
+        Route::get('social/{provider}/redirect', [ProfileController::class, 'getSocialRedirect']);
 
         Route::group(['prefix' => 'profile'], function () {
             Route::get('detail/{id}', [ProfileController::class, 'getDetail']);
@@ -44,24 +46,4 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
             'message' => 'Page Not Found. If error persists, contact info@website.com',
         ], 404);
     });
-});
-
-Route::group(['prefix' => 'social'], function () {
-    Route::get('redirect/{provider}', function (Request $request, $provider) {
-        return \Socialite::driver($provider)
-            ->stateless()
-            ->with(['state' => 'event_slug=foobar'])
-            ->redirect()
-            ->getTargetUrl();
-    });
-    Route::get('callback/{provider}', function (Request $request, $provider) {
-        try {
-            $userData = \Socialite::driver($provider)->stateless()->user();
-        } catch (\Exception $exception) {
-            dd($exception);
-        }
-        $state = $request->input('state');
-        parse_str($state, $result);
-        dd($request->all());
-    })->name('social.callback');
 });

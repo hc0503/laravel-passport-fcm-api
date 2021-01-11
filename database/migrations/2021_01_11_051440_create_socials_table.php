@@ -22,8 +22,8 @@ class CreateSocialsTable extends Migration
             $table->string('provider')->nullable();
             $table->bigInteger('social_id')->nullable();
             $table->string('token')->nullable();
-            $table->string('refreshToken')->nullable();
-            $table->bigInteger('expiresIn')->nullable();
+            $table->string('refresh_token')->nullable();
+            $table->bigInteger('expires_in')->nullable();
             $table->string('nickname')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();

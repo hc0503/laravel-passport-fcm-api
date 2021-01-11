@@ -9,6 +9,7 @@ use Validator;
 use App\Models\Profile;
 use App\Models\User;
 use App\Http\Resources\Profile as ProfileResource;
+use App\Http\Resources\Social as SocialResource;
 use Exception;
 use File;
 use Socialite;
@@ -164,5 +165,50 @@ class ProfileController extends BaseController
         }
 
         return $this->sendResponse(new ProfileResource($profile), 'The cover photo saved successfully.');
+    }
+
+    /**
+     * Profile social connection redirect by provider.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @param  String  $provider
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSocialRedirect(Request $request, $provider)
+    {
+        return $this->sendResponse([
+            'redirectURL' => Socialite::driver($provider)
+                            ->stateless()
+                            ->with(['state' => 'userKey='.$request->user('api')->guid])
+                            ->redirect()
+                            ->getTargetUrl()
+        ], 'Social redirect URL successfully.');
+    }
+
+    /**
+     * After social authentication, callback to handle some setting.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @param  String  $provider
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getSocialCallback(Request $request, $provider)
+    {
+        try {
+            $userData = Socialite::driver($provider)->stateless()->user();
+
+            parse_str($request->input('state'), $state);
+            $user = User::query()->whereGuid($state['userKey'])->firstOrFail();
+            if (!$user->profile) {
+                $user->profile()->create();
+            }
+            $user->profile->socials()->updateOrCreate([
+                'profile_id' => $user->profile->id
+            ]);
+
+            return $this->sendResponse(SocialResource::collection($user->profile->socials), 'The social account connected successfully.');
+        } catch (\Exception $exception) {
+            return $this->sendError($exception->getMessage());
+        }
     }
 }
