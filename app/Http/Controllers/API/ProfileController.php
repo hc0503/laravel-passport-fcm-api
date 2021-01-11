@@ -195,7 +195,7 @@ class ProfileController extends BaseController
     public function getSocialCallback(Request $request, $provider)
     {
         try {
-            $userData = Socialite::driver($provider)->stateless()->user();
+            $socialData = Socialite::driver($provider)->stateless()->user();
 
             parse_str($request->input('state'), $state);
             $user = User::query()->whereGuid($state['userKey'])->firstOrFail();
@@ -204,7 +204,17 @@ class ProfileController extends BaseController
             }
             $user->profile->socials()->updateOrCreate([
                 'profile_id' => $user->profile->id
-            ], $userData);
+            ], [
+                'provider' => $provider,
+                'social_id' => $socialData['id'],
+                'token' => $socialData['token'],
+                'refresh_token' => $socialData['refreshToken'],
+                'expires_in' => $socialData['expiresIn'],
+                'nickname' => $socialData['nickname'],
+                'name' => $socialData['name'],
+                'email' => $socialData['name'],
+                'avatar' => $socialData['avatar']
+            ]);
 
             return $this->sendResponse(SocialResource::collection($user->profile->socials), 'The social account connected successfully.');
         } catch (\Exception $exception) {
