@@ -204,7 +204,7 @@ class ProfileController extends BaseController
             }
             $user->profile->socials()->updateOrCreate([
                 'profile_id' => $user->profile->id
-            ]);
+            ], $userData);
 
             return $this->sendResponse(SocialResource::collection($user->profile->socials), 'The social account connected successfully.');
         } catch (\Exception $exception) {

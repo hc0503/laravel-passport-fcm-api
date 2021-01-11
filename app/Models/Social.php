@@ -23,7 +23,7 @@ class Social extends Model
         'social_id',
         'token',
         'refresh_token',
-        'expiresIn',
+        'expires_in',
         'nickname',
         'name',
         'email',

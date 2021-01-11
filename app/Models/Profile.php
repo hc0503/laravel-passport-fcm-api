@@ -43,6 +43,6 @@ class Profile extends Model
      */
     public function socials()
     {
-        return $this->hasMany(Social::class);
+        return $this->hasMany(Social::class, 'profile_id', 'id');
     }
 }
