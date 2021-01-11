@@ -214,7 +214,7 @@ class ProfileController extends BaseController
                 'expires_in' => $socialData->expiresIn ?? null,
                 'nickname' => $socialData->nickname ?? null,
                 'name' => $socialData->name ?? null,
-                'email' => $socialData->name ?? null,
+                'email' => $socialData->email ?? null,
                 'avatar' => $socialData->avatar ?? null
             ]);
 
