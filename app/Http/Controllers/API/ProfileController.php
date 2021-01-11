@@ -196,7 +196,7 @@ class ProfileController extends BaseController
     {
         try {
             $socialData = Socialite::driver($provider)->stateless()->user();
-
+            dd($socialData);
             parse_str($request->input('state'), $state);
             $user = User::query()->whereGuid($state['userKey'])->firstOrFail();
             if (!$user->profile) {
@@ -206,14 +206,14 @@ class ProfileController extends BaseController
                 'profile_id' => $user->profile->id
             ], [
                 'provider' => $provider,
-                'social_id' => $socialData['id'],
-                'token' => $socialData['token'],
-                'refresh_token' => $socialData['refreshToken'],
-                'expires_in' => $socialData['expiresIn'],
-                'nickname' => $socialData['nickname'],
-                'name' => $socialData['name'],
-                'email' => $socialData['name'],
-                'avatar' => $socialData['avatar']
+                'social_id' => $socialData['id'] ?? null,
+                'token' => $socialData['token'] ?? null,
+                'refresh_token' => $socialData['refreshToken'] ?? null,
+                'expires_in' => $socialData['expiresIn'] ?? null,
+                'nickname' => $socialData['nickname'] ?? null,
+                'name' => $socialData['name'] ?? null,
+                'email' => $socialData['name'] ?? null,
+                'avatar' => $socialData['avatar'] ?? null
             ]);
 
             return $this->sendResponse(SocialResource::collection($user->profile->socials), 'The social account connected successfully.');
