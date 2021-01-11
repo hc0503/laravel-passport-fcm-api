@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\Profile;
 use App\Models\User;
+use App\Models\Social;
 use App\Http\Resources\Profile as ProfileResource;
 use App\Http\Resources\Social as SocialResource;
 use Exception;
@@ -199,10 +200,13 @@ class ProfileController extends BaseController
             parse_str($request->input('state'), $state);
             $user = User::query()->whereGuid($state['userKey'])->firstOrFail();
             if (!$user->profile) {
-                $user->profile()->create();
+                $profile = $user->profile()->create();
+            } else {
+                $profile = $user->profile;
             }
-            $user->profile->socials()->updateOrCreate([
-                'profile_id' => $user->profile->id
+            $profile->socials()->updateOrCreate([
+                'profile_id' => $profile->id,
+                'provider' => $provider
             ], [
                 'provider' => $provider,
                 'social_id' => $socialData['id'] ?? null,
@@ -215,7 +219,7 @@ class ProfileController extends BaseController
                 'avatar' => $socialData['avatar'] ?? null
             ]);
 
-            return $this->sendResponse(SocialResource::collection($user->profile->socials), 'The social account connected successfully.');
+            return $this->sendResponse(SocialResource::collection($profile->socials), 'The social account connected successfully.');
         } catch (\Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
