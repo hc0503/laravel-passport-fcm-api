@@ -54,10 +54,6 @@ class ProfileController extends BaseController
                     'about_you' => ['required'],
                     'categories' => ['required', 'array'],
                     'tags' => ['required', 'array'],
-                    'facebook' => [],
-                    'twitter' => [],
-                    'linkedin' => [],
-                    'instagram' => []
                 ]);
             } else {                                        // AUDIENCE
                 $validator = Validator::make($input, [
@@ -65,10 +61,6 @@ class ProfileController extends BaseController
                     'name' => ['required'],
                     'interested_in' => ['required', 'array'],
                     'organization_type' => ['required'],
-                    'facebook' => [],
-                    'twitter' => [],
-                    'linkedin' => [],
-                    'instagram' => []
                 ]);
             }
             
