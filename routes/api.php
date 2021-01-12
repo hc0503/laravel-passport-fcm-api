@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\API\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,18 +21,31 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 */
 
 Route::group(['middleware' => ['throttle:60,1']], function () {
+    // Authentication
     Route::post('login', [AuthController::class, 'postLogin']);
     Route::post('signup', [AuthController::class, 'postSignup']);
     Route::post('forgot-password', [AuthController::class, 'postForgotPassword']);
+
+    // Social connection callback
     Route::get('social/{provider}/callback', [ProfileController::class, 'getSocialCallback']);
 
     Route::middleware('auth:api')->group( function () {
+        // Authentication
         Route::get('user', [AuthController::class, 'getUser']);
         Route::get('logout', [AuthController::class, 'getLogout']);
 
         Route::resource('products', ProductController::class);
+
+        // Social connection redirect
         Route::get('social/{provider}/redirect', [ProfileController::class, 'getSocialRedirect']);
 
+        // Notification
+        Route::group(['prefix' => 'notification'], function () {
+            Route::post('save-token', [NotificationController::class, 'postSaveFcmDeviceToken']);
+            Route::post('send-notification', [NotificationController::class, 'postSendFcmNotification']);
+        });
+        
+        // Profile
         Route::group(['prefix' => 'profile'], function () {
             Route::get('detail/{id}', [ProfileController::class, 'getDetail']);
             Route::post('store', [ProfileController::class, 'postStore']);
@@ -40,6 +54,7 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
         });
     });
 
+    // Fallback when URL is not existed.
     Route::fallback(function(){
         return response()->json([
             'success' => false,

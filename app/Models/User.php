@@ -52,6 +52,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function profile()
     {
-        return $this->hasOne(Profile::class);
+        return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the firebase device tokens associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function fcmDeviceTokens()
+    {
+        return $this->hasMany(FcmDeviceToken::class, 'user_id', 'id');
     }
 }
