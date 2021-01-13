@@ -19,4 +19,8 @@ class Notification extends Model
         'body',
         'is_archive'
     ];
+
+    protected $casts = [
+        'is_archive' => 'boolean',
+    ];
 }
