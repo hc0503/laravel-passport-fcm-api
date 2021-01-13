@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Profile as ProfileResource;
 use App\Models\Profile;
+use Carbon\Carbon;
 
 class Social extends JsonResource
 {
@@ -28,7 +29,8 @@ class Social extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'avatar' => $this->avatar,
-            'connected_at' => $this->updated_at
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
+            'updated_at' => Carbon::parse($this->updated_at)->toDateTimeString()
         ];
     }
 }

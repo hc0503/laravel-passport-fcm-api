@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Auth as AuthResource;
 use App\Models\User;
+use Carbon\Carbon;
 
 class Notification extends JsonResource
 {
@@ -23,7 +24,8 @@ class Notification extends JsonResource
             'title' => $this->title,
             'body' => $this->body,
             'is_archive' => $this->is_archive,
-            'created_at' => $this->created_at
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
+            'updated_at' => Carbon::parse($this->updated_at)->toDateTimeString()
         ];
     }
 }

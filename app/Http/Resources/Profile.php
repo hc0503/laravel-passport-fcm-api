@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Auth as AuthResource;
 use App\Models\User;
+use Carbon\Carbon;
 
 class Profile extends JsonResource
 {
@@ -30,8 +31,8 @@ class Profile extends JsonResource
             'name' => $this->name,
             'interested_in' => json_decode($this->interested_in),
             'organization_type' => $this->organization_type,
-            'created_at' => $this->created_at->format('d/m/Y'),
-            'updated_at' => $this->updated_at->format('d/m/Y'),
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
+            'updated_at' => Carbon::parse($this->updated_at)->toDateTimeString()
         ];
     }
 }
