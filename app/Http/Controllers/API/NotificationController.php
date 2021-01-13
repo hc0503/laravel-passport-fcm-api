@@ -14,11 +14,13 @@ use App\Http\Resources\FcmDeviceToken as FcmDeviceTokenResource;
 
 class NotificationController extends BaseController
 {
-    protected $SERVER_API_KEY;
+    protected $firebaseApiKey, $notificationImage, $user;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->SERVER_API_KEY = config('services.firebase.server_api_key');
+        $this->firebaseApiKey = config('services.firebase.server_api_key');
+        $this->notificationImage = 'https://firebase.google.com/images/social.png';
+        $this->user = auth('api')->user();
     }
 
     /**
@@ -39,8 +41,8 @@ class NotificationController extends BaseController
         }
 
         try {
-            $deviceToken = auth('api')->user()->fcmDeviceTokens()->updateOrCreate([
-                'user_id' => auth('api')->user()->id,
+            $deviceToken = $this->user->fcmDeviceTokens()->updateOrCreate([
+                'user_id' => $this->user->id,
                 'token' => $validated['token']
             ]);
         } catch (Exception $exception) {
@@ -61,20 +63,22 @@ class NotificationController extends BaseController
         try {
             $validated = $this->validate($request, [
                 'title' => ['required'],
-                'body' => ['required']
+                'body' => ['required'],
+                'type' => ['required']
             ]);
         } catch (ValidationException $validationException) {
             return $this->sendError($validationException->getMessage(), $validationException->errors());  
         }
+        $validated['image'] = $this->notificationImage;
         try {
-            $firebaseTokens = auth('api')->user()->fcmDeviceTokens()->pluck('token')->all();
+            $firebaseTokens = $this->user->fcmDeviceTokens()->pluck('token')->all();
             $data = [
                 "registration_ids" => $firebaseTokens,
                 "notification" => $validated
             ];
             $dataString = json_encode($data);
             $headers = [
-                'Authorization: key=' . $this->SERVER_API_KEY,
+                'Authorization: key=' . $this->firebaseApiKey,
                 'Content-Type: application/json',
             ];
         
@@ -86,14 +90,17 @@ class NotificationController extends BaseController
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
                 
-            if (curl_exec($ch)) {
-                return $this->sendResponse([], 'The notification is sent successfully.');
-            } else {
+            if (!curl_exec($ch)) {
                 return $this->sendError(curl_error($ch));
             }
             curl_close($ch);
+
+            // Store notification into database.
+            $this->user->notifications()->create($validated);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
+        
+        return $this->sendResponse([], 'The notification is sent successfully.');
     }
 }

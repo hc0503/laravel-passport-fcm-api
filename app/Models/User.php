@@ -64,4 +64,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(FcmDeviceToken::class, 'user_id', 'id');
     }
+
+    /**
+     * Get the notifications associated with the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id', 'id');
+    }
 }
