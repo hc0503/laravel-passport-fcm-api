@@ -46,7 +46,7 @@ class NotificationController extends BaseController
             $deviceToken = $this->user->fcmDeviceTokens()->updateOrCreate([
                 'user_id' => $this->user->id,
                 'token' => $validated['token']
-            ]);
+            ], $validated);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
