@@ -98,12 +98,12 @@ class NotificationController extends BaseController
             curl_close($ch);
 
             // Store notification into database.
-            $this->user->notifications()->create($validated);
+            $notification = $this->user->notifications()->create($validated);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
         
-        return $this->sendResponse([], 'The notification is sent successfully.');
+        return $this->sendResponse($notification, 'The notification is sent successfully.');
     }
 
     /**
