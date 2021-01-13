@@ -41,6 +41,8 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
 
         // Notification
         Route::group(['prefix' => 'notification'], function () {
+            Route::get('/', [NotificationController::class, 'getNotifications']);
+            Route::post('archive', [NotificationController::class, 'postArchive']);
             Route::post('save-token', [NotificationController::class, 'postSaveFcmDeviceToken']);
             Route::post('send-notification', [NotificationController::class, 'postSendFcmNotification']);
         });

@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\FcmDeviceToken;
+use App\Models\Notification;
 use App\Http\Controllers\API\BaseController as BaseController;
 use Exception;
 use Validator;
 use Illuminate\Validation\ValidationException;
 use App\Http\Resources\FcmDeviceToken as FcmDeviceTokenResource;
+use App\Http\Resources\Notification as NotificationResource;
 
 class NotificationController extends BaseController
 {
@@ -102,5 +104,62 @@ class NotificationController extends BaseController
         }
         
         return $this->sendResponse([], 'The notification is sent successfully.');
+    }
+
+    /**
+     * Get audience notification list which is not archived by type.
+     * The type = ['PERFORMANCE', 'AUDIENCE']
+     * 
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getNotifications(Request $request)
+    {
+        try {
+            $validated = $this->validate($request, [
+                'type' => ['required'],
+            ]);
+        } catch (ValidationException $validationException) {
+            return $this->sendError($validationException->getMessage(), $validationException->errors());  
+        }
+
+        try {
+            $notifications = $this->user->notifications
+                            ->where('type', $validated['type'])
+                            ->where('is_archive', 0);
+        } catch (Exception $exception) {
+            return $this->sendError($exception->getMessage());
+        }
+
+        return $this->sendResponse(NotificationResource::collection($notifications), 'The notifications are gotten successfully.');
+    }
+
+    /**
+     * Archive the specified notification.
+     * 
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postArchive(Request $request)
+    {
+        try {
+            $validated = $this->validate($request, [
+                'notification_id' => ['required'],
+            ]);
+        } catch (ValidationException $validationException) {
+            return $this->sendError($validationException->getMessage(), $validationException->errors());  
+        }
+
+        try {
+            $notification = Notification::query()
+                            ->whereGuid($validated['notification_id'])
+                            ->firstOrFail();
+            $notification->is_archive = 1;
+            $notification->save();
+        } catch (Exception $exception) {
+            return $this->sendError($exception->getMessage());
+        }
+        
+        return $this->sendResponse(new NotificationResource($notification), 'The notification is archived successfully.');
     }
 }
