@@ -103,7 +103,7 @@ class NotificationController extends BaseController
             return $this->sendError($exception->getMessage());
         }
         
-        return $this->sendResponse($notification, 'The notification is sent successfully.');
+        return $this->sendResponse(new NotificationResource($notification), 'The notification is sent successfully.');
     }
 
     /**
