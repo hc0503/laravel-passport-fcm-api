@@ -66,8 +66,8 @@ class NotificationController extends BaseController
             $validated = $this->validate($request, [
                 'title' => ['required'],
                 'body' => ['required'],
-                'type' => ['required', 'in:PERFORMANCE, AUDIENCE'],
-                'notification_type' => ['required', 'in:FOLLOW, CLAP, GIG, INVITE, MIC']
+                'type' => ['required', 'in:PERFORMANCE,AUDIENCE'],
+                'notification_type' => ['required', 'in:FOLLOW,CLAP,GIG,INVITE,MIC']
             ]);
         } catch (ValidationException $validationException) {
             return $this->sendError($validationException->getMessage(), $validationException->errors());  
@@ -122,7 +122,7 @@ class NotificationController extends BaseController
     {
         try {
             $validated = $this->validate($request, [
-                'type' => ['required', 'in:PERFORMANCE, AUDIENCE'],
+                'type' => ['required', 'in:PERFORMANCE,AUDIENCE'],
             ]);
         } catch (ValidationException $validationException) {
             return $this->sendError($validationException->getMessage(), $validationException->errors());  

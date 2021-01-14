@@ -24,6 +24,7 @@ class WalletController extends BaseController
      */
     public function getTransactions(Request $request)
     {
+        dd($this->user->balance);
         return $this->sendResponse(TransactionResource::collection($this->user->transactions), 'Your balance: $'.$this->user->balance
         );
     }
@@ -85,7 +86,7 @@ class WalletController extends BaseController
             $validated = $this->validate($request, [
                 'gig_id' => ['required'],
                 'amount' => ['required', 'integer'],
-                'type' => ['required', 'in:TIP, TICKET']
+                'type' => ['required', 'in:TIP,TICKET']
             ]);
         } catch (ValidationException $validationException) {
             return $this->sendError($validationException->getMessage(), $validationException->errors());  
@@ -104,7 +105,8 @@ class WalletController extends BaseController
             $gigItem->meta_type = $validated['type'];
             $gigItem->getMetaProduct();
 
-            $this->user->pay($gigItem);
+            $this->user->gift(\App\Models\User::find(8), $gigItem);
+            \App\Models\User::find(8)->paid($gigItem, true);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
