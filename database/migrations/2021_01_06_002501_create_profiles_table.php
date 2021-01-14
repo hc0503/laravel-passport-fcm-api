@@ -19,7 +19,10 @@ class CreateProfilesTable extends Migration
             $table->foreignId('user_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('type')->default('PERFORMER');
+                $table->enum(
+                    'type',
+                    ['PERFORMANCE', 'AUDIENCE']
+                )->default('PERFORMANCE');
             // PERFORMER
             $table->string('cover_photo')->nullable();
             $table->string('profile_photo')->nullable();
@@ -30,7 +33,10 @@ class CreateProfilesTable extends Migration
             // AUDIENCE
             $table->string('name')->nullable();
             $table->json('interested_in')->nullable();
-            $table->string('organization_type')->nullable();
+            $table->enum(
+                'organization_type',
+                ['INDIVIDUAL', 'VENUE']
+            )->default('INDIVIDUAL');
 
             $table->timestamps();
         });

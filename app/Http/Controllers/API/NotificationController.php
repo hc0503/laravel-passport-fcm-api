@@ -66,17 +66,22 @@ class NotificationController extends BaseController
             $validated = $this->validate($request, [
                 'title' => ['required'],
                 'body' => ['required'],
-                'type' => ['required']
+                'type' => ['required', 'in:PERFORMANCE, AUDIENCE'],
+                'notification_type' => ['required', 'in:FOLLOW, CLAP, GIG, INVITE, MIC']
             ]);
         } catch (ValidationException $validationException) {
             return $this->sendError($validationException->getMessage(), $validationException->errors());  
         }
-        $validated['image'] = $this->notificationImage;
+        
         try {
             $firebaseTokens = $this->user->fcmDeviceTokens()->pluck('token')->all();
             $data = [
                 "registration_ids" => $firebaseTokens,
-                "notification" => $validated
+                "notification" => [
+                    'title' => $validated['title'],
+                    'body' => $validated['body'],
+                    'image' => $this->notificationImage
+                ]
             ];
             $dataString = json_encode($data);
             $headers = [
@@ -117,7 +122,7 @@ class NotificationController extends BaseController
     {
         try {
             $validated = $this->validate($request, [
-                'type' => ['required'],
+                'type' => ['required', 'in:PERFORMANCE, AUDIENCE'],
             ]);
         } catch (ValidationException $validationException) {
             return $this->sendError($validationException->getMessage(), $validationException->errors());  

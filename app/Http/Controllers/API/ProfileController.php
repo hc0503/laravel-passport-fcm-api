@@ -49,7 +49,7 @@ class ProfileController extends BaseController
             $input = $request->all();
             if ($input['type'] === $this->profileType) {    // PERFORMER
                 $validator = Validator::make($input, [
-                    'type' => ['required'],
+                    'type' => ['required', 'in:PERFORMANCE, AUDIENCE'],
                     'stage_name' => ['required'],
                     'about_you' => ['required'],
                     'categories' => ['required', 'array'],
@@ -57,7 +57,7 @@ class ProfileController extends BaseController
                 ]);
             } else {                                        // AUDIENCE
                 $validator = Validator::make($input, [
-                    'type' => ['required'],
+                    'type' => ['required', 'in:PERFORMANCE, AUDIENCE'],
                     'name' => ['required'],
                     'interested_in' => ['required', 'array'],
                     'organization_type' => ['required'],

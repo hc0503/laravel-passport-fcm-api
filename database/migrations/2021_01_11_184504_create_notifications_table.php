@@ -19,8 +19,14 @@ class CreateNotificationsTable extends Migration
             $table->foreignId('user_id')
                 ->constrained()
                 ->onDelete('cascade');
-            // PERFORMANCE, AUDIENCE
-            $table->string('type')->default('PERFORMANCE');
+            $table->enum(
+                'type',
+                ['PERFORMANCE', 'AUDIENCE']
+            )->default('PERFORMANCE');
+            $table->enum(
+                'notification_type',
+                ['FOLLOW', 'CLAP', 'GIG', 'INVITE', 'MIC']
+            )->default('FOLLOW');
             $table->string('title')->nullable();
             $table->string('body')->nullable();
             $table->boolean('is_archive')->default(0);

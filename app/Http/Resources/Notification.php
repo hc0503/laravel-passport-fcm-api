@@ -21,6 +21,7 @@ class Notification extends JsonResource
             'id' => $this->guid,
             'user' => new AuthResource(User::query()->findOrFail($this->user_id)),
             'type' => $this->type,
+            'notification_type' => $this->notification_type,
             'title' => $this->title,
             'body' => $this->body,
             'is_archive' => $this->is_archive,

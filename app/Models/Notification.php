@@ -15,6 +15,7 @@ class Notification extends Model
     protected $fillable = [
         'user_id',
         'type',
+        'notification_type',
         'title',
         'body',
         'is_archive'
