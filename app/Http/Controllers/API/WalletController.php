@@ -24,7 +24,7 @@ class WalletController extends BaseController
      */
     public function getTransactions(Request $request)
     {
-        return $this->sendResponse(TransactionResource::collection($this->user->transactions), 'Your balance: '.$this->user->balance
+        return $this->sendResponse(TransactionResource::collection($this->user->transactions), 'Your balance: $'.$this->user->balance
         );
     }
 
