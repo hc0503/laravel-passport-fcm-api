@@ -9,6 +9,7 @@ use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\WalletController;
+use App\Http\Controllers\API\GigItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,11 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
             Route::post('withdraw', [WalletController::class, 'postWithdraw']);
             Route::post('deposit', [WalletController::class, 'postDeposit']);
             Route::post('buy', [WalletController::class, 'postBuy']);
+        });
+
+        // Gig
+        Route::group(['prefix' => 'gig'], function () {
+            Route::get('/', [GigItemController::class, 'getGigItems']);
         });
     });
 
