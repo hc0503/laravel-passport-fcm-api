@@ -105,8 +105,7 @@ class WalletController extends BaseController
             $gigItem->meta_type = $validated['type'];
             $gigItem->getMetaProduct();
 
-            $this->user->gift(\App\Models\User::find(8), $gigItem);
-            \App\Models\User::find(8)->paid($gigItem, true);
+            $this->user->pay($gigItem);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
