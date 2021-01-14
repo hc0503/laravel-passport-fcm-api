@@ -21,8 +21,8 @@ class CreateProfilesTable extends Migration
                 ->onDelete('cascade');
                 $table->enum(
                     'type',
-                    ['PERFORMANCE', 'AUDIENCE']
-                )->default('PERFORMANCE');
+                    ['PERFORMER', 'AUDIENCE']
+                )->default('PERFORMER');
             // PERFORMER
             $table->string('cover_photo')->nullable();
             $table->string('profile_photo')->nullable();
