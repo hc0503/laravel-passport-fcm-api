@@ -24,7 +24,7 @@ class WalletController extends BaseController
      */
     public function getTransactions(Request $request)
     {
-        return $this->sendResponse(TransactionResource::collection($this->user->transactions), 'The transaction is fetched successfully.'
+        return $this->sendResponse(TransactionResource::collection($this->user->transactions), 'Your balance: '.$this->user->balance
         );
     }
 
@@ -81,7 +81,6 @@ class WalletController extends BaseController
      */
     public function postBuy(Request $request)
     {
-        // dd($request->all());
         try {
             $validated = $this->validate($request, [
                 'gig_id' => ['required'],
