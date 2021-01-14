@@ -9,9 +9,15 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use App\Helpers\HasGuidTrait;
 
-class User extends Authenticatable implements MustVerifyEmail
+use Bavix\Wallet\Traits\HasWallet;
+use Bavix\Wallet\Interfaces\Wallet;
+use Bavix\Wallet\Interfaces\Customer;
+use Bavix\Wallet\Traits\CanPay;
+
+class User extends Authenticatable implements MustVerifyEmail, Wallet, Customer
 {
     use HasFactory, Notifiable, HasApiTokens, HasGuidTrait;
+    use HasWallet, CanPay;
 
     /**
      * The attributes that are mass assignable.
