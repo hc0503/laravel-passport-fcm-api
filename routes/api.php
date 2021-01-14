@@ -8,6 +8,7 @@ use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,14 @@ Route::group(['middleware' => ['throttle:60,1']], function () {
             Route::post('store', [ProfileController::class, 'postStore']);
             Route::post('cover-photo', [ProfileController::class, 'postCoverPhoto']);
             Route::post('profile-photo', [ProfileController::class, 'postProfilePhoto']);
+        });
+
+        // Wallet
+        Route::group(['prefix' => 'wallet'], function () {
+            Route::get('transactions', [WalletController::class, 'getTransactions']);
+            Route::post('withdraw', [WalletController::class, 'postWithdraw']);
+            Route::post('deposit', [WalletController::class, 'postDeposit']);
+            Route::post('buy', [WalletController::class, 'postBuy']);
         });
     });
 
