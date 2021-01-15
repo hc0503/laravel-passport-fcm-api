@@ -9,6 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Exception;
 use App\Models\GigItem;
 use App\Http\Resources\Transaction as TransactionResource;
+use App\Models\User;
 
 class WalletController extends BaseController
 {
@@ -24,7 +25,7 @@ class WalletController extends BaseController
      */
     public function getTransactions(Request $request)
     {
-        dd($this->user->balance);
+        // dd($this->user->balance);
         return $this->sendResponse(TransactionResource::collection($this->user->transactions), 'Your balance: $'.$this->user->balance
         );
     }
@@ -67,7 +68,10 @@ class WalletController extends BaseController
         }
 
         try {
-            $this->user->deposit($validated['amount']); 
+            $this->user->deposit($validated['amount'], [
+                'type' => 'Deposit',
+                'description' => 'You charged $'. $validated['amount'] . '.'
+            ]);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
@@ -97,15 +101,22 @@ class WalletController extends BaseController
                         ->whereGuid($validated['gig_id'])
                         ->firstOrFail();
 
-            // set dynamic amount of product.
-            $this->user->amount = $validated['amount'];
-            $gigItem->getAmountProduct($this->user);
+            // // set dynamic amount of product.
+            // $this->user->amount = $validated['amount'];
+            // $gigItem->getAmountProduct($this->user);
 
-            // set meta value of gigitem.
-            $gigItem->meta_type = $validated['type'];
-            $gigItem->getMetaProduct();
+            // // set meta value of gigitem.
+            // $gigItem->meta_type = $validated['type'];
+            // $gigItem->getMetaProduct();
 
-            $this->user->pay($gigItem);
+            $this->user->withdraw($validated['amount'], [
+                'type' => $validated['type'],
+                'description' => 'Sent $'. $validated['amount'] .' to gig #'. $gigItem->id .'.'
+            ]);
+            User::findOrFail($gigItem->user_id)->deposit($validated['amount'], [
+                'type' => $validated['type'],
+                'description' => 'Received $'.$validated['amount'] .' as '. $validated['type'] .' in gig #'. $gigItem->id .'.'
+            ]);
         } catch (Exception $exception) {
             return $this->sendError($exception->getMessage());
         }
