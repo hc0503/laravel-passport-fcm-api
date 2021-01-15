@@ -31,6 +31,9 @@ class Profile extends JsonResource
             'name' => $this->name,
             'interested_in' => json_decode($this->interested_in),
             'organization_type' => $this->organization_type,
+            'streams' => '312',
+            'followers' => '1,105',
+            'claps' => '2.3K',
             'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
             'updated_at' => Carbon::parse($this->updated_at)->toDateTimeString()
         ];
