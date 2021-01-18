@@ -62,5 +62,10 @@ return [
 
     'firebase' => [
         'server_api_key' =>env('SERVER_API_KEY')
+    ],
+
+    'stripe' => [
+        'stripe_key'    => env('STRIPE_KEY'),
+        'stripe_secret' => env('STRIPE_SECRET')
     ]
 ];
