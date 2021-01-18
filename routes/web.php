@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +23,14 @@ Route::get('/', function () {
 Auth::routes(['verify' => true]);
 
 Route::middleware(['auth', 'verified'])->group( function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     Route::post('save-token', [HomeController::class, 'postSaveToken'])->name('save-token');
     Route::post('send-notification', [HomeController::class, 'postSendNotification'])->name('send.notification');
+
+    Route::get('payments', [PaymentController::class, 'getPayments']);
+    Route::post('charge', [PaymentController::class, 'postCharge'])->name('charge');
+    Route::get('test', [PaymentController::class, 'getTest'])->name('test');
 });
 
 Route::group(['prefix' => 'social'], function () {
