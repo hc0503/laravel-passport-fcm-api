@@ -32,7 +32,10 @@ class HomeController extends Controller
      */
     public function postSaveToken(Request $request)
     {
-        auth()->user()->update(['device_token'=>$request->token]);
+        $deviceToken = auth()->user()->fcmDeviceTokens()->updateOrCreate([
+            'user_id' => auth()->user()->id,
+            'token' => $request->token
+        ], $request->all());
 
         return response()->json(['token saved successfully.']);
     }
